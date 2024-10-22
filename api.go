@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"os"
 )
 
@@ -14,12 +15,29 @@ type MessageData struct {
 	Text  string `json:"text"`
 }
 
+// Create a global HTTP client with proxy settings
+func createHttpClient() *http.Client {
+	proxyURLStr := os.Getenv("HTTP_PROXY")
+	if proxyURLStr != "" {
+		proxyURL, err := url.Parse(proxyURLStr)
+		if err != nil {
+			fmt.Println("Error parsing proxy URL:", err)
+			return &http.Client{}
+		}
+		transport := &http.Transport{Proxy: http.ProxyURL(proxyURL)}
+		return &http.Client{Transport: transport}
+	}
+	return &http.Client{}
+}
+
+var httpClient = createHttpClient()
+
 func apiSendMessageUser(user, msg string) (*http.Response, error) {
 	mmApiHost := os.Getenv("MM_API_HOST")
 	mmAppId := os.Getenv("MM_APP_ID")
 	mmAppKey := os.Getenv("MM_APP_KEY")
 
-	url := fmt.Sprintf("https://%s/api/messages/sendFromApp?applicationId=%s&clientKey=%s", mmApiHost, mmAppId, mmAppKey)
+	urlStr := fmt.Sprintf("https://%s/api/messages/sendFromApp?applicationId=%s&clientKey=%s", mmApiHost, mmAppId, mmAppKey)
 
 	data := MessageData{
 		Email: user,
@@ -31,7 +49,13 @@ func apiSendMessageUser(user, msg string) (*http.Response, error) {
 		return nil, err
 	}
 
-	resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonData))
+	req, err := http.NewRequest("POST", urlStr, bytes.NewBuffer(jsonData))
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
