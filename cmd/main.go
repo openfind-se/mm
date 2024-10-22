@@ -5,7 +5,7 @@ import (
 	"io"
 
 	"github.com/joho/godotenv"
-	mm "github.com/openfind-se/mm/pkg"
+	"github.com/openfind-se/mm"
 )
 
 func main() {
