@@ -1,4 +1,4 @@
-module github.com/slv922/mm
+module github.com/openfind-se/mm
 
 go 1.23.0
 
