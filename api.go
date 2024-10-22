@@ -1,4 +1,4 @@
-package main
+package mm
 
 import (
 	"bytes"
@@ -32,7 +32,7 @@ func createHttpClient() *http.Client {
 
 var httpClient = createHttpClient()
 
-func apiSendMessageUser(user, msg string) (*http.Response, error) {
+func SendMessageUser(user, msg string) (*http.Response, error) {
 	mmApiHost := os.Getenv("MM_API_HOST")
 	mmAppId := os.Getenv("MM_APP_ID")
 	mmAppKey := os.Getenv("MM_APP_KEY")

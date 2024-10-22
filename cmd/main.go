@@ -5,6 +5,7 @@ import (
 	"io"
 
 	"github.com/joho/godotenv"
+	mm "github.com/openfind-se/mm/pkg"
 )
 
 func main() {
@@ -17,7 +18,7 @@ func main() {
 	user := "james_liao@openfind.com.tw"
 	msg := "Hello, this is a test message."
 
-	resp, err := apiSendMessageUser(user, msg)
+	resp, err := mm.SendMessageUser(user, msg)
 	if err != nil {
 		fmt.Println("Error sending message:", err)
 	} else {
