@@ -16,7 +16,7 @@ type MessageData struct {
 }
 
 // Create a global HTTP client with proxy settings
-func createHttpClient() *http.Client {
+func CreateHttpClient() *http.Client {
 	proxyURLStr := os.Getenv("HTTP_PROXY")
 	if proxyURLStr != "" {
 		proxyURL, err := url.Parse(proxyURLStr)
@@ -30,7 +30,7 @@ func createHttpClient() *http.Client {
 	return &http.Client{}
 }
 
-var httpClient = createHttpClient()
+var httpClient = CreateHttpClient()
 
 func SendMessageUser(user, msg string) (*http.Response, error) {
 	mmApiHost := os.Getenv("MM_API_HOST")
